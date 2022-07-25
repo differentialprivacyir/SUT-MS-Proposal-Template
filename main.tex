@@ -1,0 +1,396 @@
+
+%   Developed By Golgolnia-Milad(golgolniamilad@gmail.com)
+%   Directed By Zolfaghari-Majid(mazolfaghari@ce.sharif.edu)
+%   Supervisod By Jalili-Rasool(jalili@sharif.edu)
+%   At DNSL Lab(http://dnsl.ce.sharif.edu/members.html)
+
+
+\documentclass[a4paper]{article}
+%To  colorize table
+\usepackage[table]{xcolor}
+\usepackage[a4paper, total={7in, 11.0in},includefoot, includehead, headsep=24pt, headheight=4cm]{geometry}
+\usepackage{layout}%No need for this package at production.
+\usepackage{setspace}%For switch between line spacing.
+\usepackage{graphicx}
+%For drawing lines and arbitrary shapes:
+\usepackage{tikz}
+%To set fixed length for table: 
+\usepackage{array}
+\usepackage{ifthen}
+%To draw squares:
+\usepackage{amssymb}
+%To trim strings:
+\usepackage{trimspaces}
+%To draw dynamic multi-column table:
+\usepackage{etoolbox}
+%For references:
+\usepackage[
+    backend=biber,
+    sorting=none
+]{biblatex}
+
+\addbibresource{references.bib}
+
+%List of needed counters:
+\newcounter{length}
+\newcounter{itemCount}
+
+
+\title{proposalM.S}
+\author{Milad Golgolnia}
+\date{June 2022}
+
+\newcommand{\blankField}{ $\ldots\ldots\ldots\ldots\ldots$}
+\newcommand{\seperate}{
+    \begin{center}
+        \begin{tikzpicture}
+            \draw[gray,dashed] (0, 0) -- (10, 0);
+        \end{tikzpicture}
+    \end{center}
+}
+\makeatletter
+\newcommand{\trim}[1]{\trim@spaces@noexp{#1}}
+\makeatother
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{
+    \begin{tabular}{c}
+         \includegraphics[width=3cm, height=3cm]{./logo-fa-IR.png}\\
+         \vspace{0.2cm}
+    \end{tabular}
+}
+\chead{
+    \doublespacing
+    بسمه تعالی \\
+    دانشکده مهندسی کامپیوتر \\
+    \textbf{فرم تعریف پروژه کارشناسی ارشد}
+}
+\lhead{
+    \setstretch{2}
+            \begin{tabular}{c c}
+                 تاریخ: & \blankField \\
+                شماره: & \blankField \\
+                پیوست: & \blankField
+            \end{tabular}
+}
+
+
+%Improvement: take advantages of the optional parameters! Currently I don't have any time to learn and implement it.
+\newcommand{\Information}[9]{
+{
+    \setstretch{2}
+    \bfseries
+    \begin{tabular}{r r r}
+         نام و نام خانوادگی : #1
+         &
+         شماره دانشجویی: #2
+         &
+         معدل: #3
+         \\
+         گرایش: #4
+         &
+         تعداد واحدهای گذرانده: #5
+         &
+         استاد راهنما: #6
+         \\
+         استاد راهنمای همکار: #7
+         &
+         تعداد واحد پروژه: #8
+         &
+         استاد ممتحن: #9
+    \end{tabular}
+}
+}
+\newcommand{\Title}[3]{
+    {
+    \setstretch{2}
+    \bfseries
+    \noindent
+    عنوان کامل پروژه:
+    
+    فارسی: #1
+    
+    انگلیسی:
+    \lr{#2}\\
+    
+    \noindent
+    نوع پروژه:\;
+    \begin{tabular}{m{10em} m{10em}}
+        نظری:
+        \ifthenelse{#3 = 0 \or #3 = 2}{
+            $\blacksquare$
+        }{
+            $\square$
+        }
+        &
+        عملی:
+        \ifthenelse{#3 = 1 \or #3 = 2}{
+            $\blacksquare$
+        }{
+            $\square$
+        }
+    \end{tabular}
+    }
+}
+\newcommand{\Description}[2]{
+    {
+        \setstretch{2}
+        \noindent
+        \textbf{شرح مختصر پروژه:}
+        (با تاكيد بر اهمیت موضوع، مشکلات موجود، تعریف مسئله، کاربردها، دادگان مورد استفاده (در صورت نیاز) و نحوه ارزیابی در حدود 250 کلمه) 
+        
+        #1
+        
+        \vspace{20pt}
+        
+        \setcounter{length}{0}
+        \setcounter{itemCount}{0}
+        %First obtain the length of field
+        \foreach\x in#2{%
+            \addtocounter{length}{1}
+        }
+        
+        \textbf{کلمات کلیدی:}\;
+        \foreach\x in#2{%
+            \addtocounter{itemCount}{1}
+            \trim{\x}
+            \ifthenelse{\thelength = \theitemCount}{}{-}
+        }
+    }
+}
+
+\makeatletter
+\newcommand{\ProgressTable}[1]{
+{
+    \noindent
+    \textbf{مراحل انجام پروژه و زمان‌بندی آن:}
+    \\
+    
+    \def\tableData{}
+    
+    \foreach \x\y in #1{
+        \protected@xappto\tabledata{ \x & \y \\ \noexpand\hline}
+    }
+    
+    %Add space to each row in table:
+    \renewcommand{\arraystretch}{1.5}
+    \begin{center}
+    \begin{tabular}{| m{0.8\textwidth} | c |}
+        \hline
+        \tabledata
+    \end{tabular}
+    %Add space to each row in table:
+        
+    \end{center}
+    \renewcommand{\arraystretch}{1}
+}
+    
+}
+\makeatother
+
+\newcommand{\References}{
+{
+    \noindent
+    \nocite{*}
+    \textbf{مراجع:}
+    \begin{latin}
+        \printbibliography[heading=none]
+    \end{latin}
+}
+}
+\newcommand{\Courses}[1]{
+{
+    \noindent
+    \textbf{دروس مورد نیاز:}\\
+    
+    %Not completed yet.
+    \centering
+    %Add space to each row in table:
+    \renewcommand{\arraystretch}{1.5}
+    \begin{tabular}{| >{\centering}m{6em} | >{\centering}m{3em} | >{\centering}m{6em} | >{\centering}m{6em} | >{\centering}m{3em} | >{\centering\arraybackslash}m{6em} |}
+         \hline
+         \rowcolor{lightgray}
+         \multicolumn{3}{|c|}{جبرانی}
+         &
+         \multicolumn{3}{|c|}{تخصصی
+            \tiny
+            (ارتباط موضوع پروژه با دروسی که دانشجو گذرانده یا باید بگذراند)
+         }
+         \\
+         \hline
+         \rowcolor{lightgray}
+         گذرانده
+         &
+         نمره
+         &
+         باید بگذراند
+         &
+         گذرانده
+         &
+         نمره
+         &
+         باید بگذراند
+         \\
+         \hline
+         &
+         &
+         &
+         &
+         &
+         \\
+         \hline
+    \end{tabular}
+    %Add space to each row in table:
+    \renewcommand{\arraystretch}{1}
+}
+}
+\newcommand{\Signatures}{
+{
+    %Add space to each row in table:
+    \renewcommand{\arraystretch}{1.5}
+    
+    \begin{center}
+        \scriptsize
+        \begin{tabular}{|m{15em}|m{15em}|m{15em}|}
+            \hline
+            استاد راهنما:
+            &
+            نظر گروه:
+            &
+            نظر کمیته تحصیلات تکمیلی دانشکده:
+            \\
+            تاریخ تحویل فرم به مدیر گروه:
+            &
+            &
+            \\
+            امضای استاد راهنما:
+            &
+            تاریخ جلسه گروه:
+            &
+            تاریخ جلسه کمیته:
+            \\ 
+            &
+            امضای مدیر گروه:
+            &
+            امضای معاون تحصیلات تکمیلی:
+            \\
+            &
+            &
+            \\
+            &
+            &
+            \\
+            & &\\
+            & &\\
+            \hline
+        \end{tabular}
+    \end{center}
+    \footnotesize
+    توجه: فرم تعریف پروژه بایستی یک روز قبل از جلسه گروه توسط استاد راهنما تحویل مدیر گروه شود.
+    %Add space to each row in table:
+    \renewcommand{\arraystretch}{1}
+}
+}
+
+%\renewcommand{\headrulewidth}{0pt}
+%\renewcommand{\footrulewidth}{0pt}
+
+\usepackage{xepersian}
+\settextfont[
+Scale=1.35,
+Extension=.ttf, 
+Path=./,
+BoldFont=bmitrabd,
+ItalicFont=bmitra,
+BoldItalicFont=bmitra
+]{BMitra}
+
+\begin{document}
+
+%First parameter: Name of student(Your name)
+%Second parameter: Student Number
+%Third parameter: Student's GPA
+%Fourth parameter: Student's Major
+%Fifth parameter: Student's passed courses credits.
+%Sixth parameter: Project Supervisor.
+%Seventh parameter: Project Co-Supervisor
+%Eighth parameter: Project Credits.
+%Ninth parameter: Project Examiner
+\Information{
+     میلاد گل‌گل‌نیا
+}{
+    ۴۰۰۲۱۰۷۳۳
+}{
+    ۱۹/۰۷
+}{
+    رایانش امن
+}{
+    ۹
+}{
+    دکتر رسول جلیلی
+}{}{
+    ۶
+}{
+    دکتر مرتضی امینی
+}
+
+\seperate
+
+%First parameter: Title of your project in Persian.
+%Second parameter: Title of your project in English.
+%Third parameter: Type of your project =>
+%   0: Theoretical.
+%   1: Practical.
+%   2: Both practical & theoretical
+\Title{
+    حریم خصوصی تفاضلی محلی شخصی شده در پایگاه داده‌های آماری
+}{
+    Local Personalized Differential Privacy in Statistical Databases
+}{
+    2
+}
+\seperate
+
+\Description{
+توسعه‌دهندگان خدمات، به منظور بهبود خدمات خود، داده‌ها را تحلیل می‌کنند؛ اما ممکن است این تحلیل داده‌ها منجر به نقض حریم خصوصی کاربران شود. تا به حال روش‌های مختلفی برای حریم خصوصی تفاضلی ارائه شده است اما اکثر آن‌ها از نبود یک تعریف دقیق صوری و ریاضیاتی رنج می‌بردند. در سال ۲۰۰۶ حریم خصوصی تفاضلی ارائه شد که با استفاده از یک تعریف صوری، حفظ مقدار مشخصی از حریم خصوصی را ضمانت می‌کرد و از این رو مورد اقبال زیادی در پژوهش و صنعت قرار گرفت. با این وجود، این تعریف با فرض معتمد بودن کارپذیر بیان شده بود در حالی که در بسیاری از موارد، این فرض برقرار نیست. به همین دلیل تعریف حریم خصوصی تفاضلی محلی ارائه شد که مساله‌ی اعتماد کاربران به کارپذیرهای مرکزی را برطرف می‌سازد. این روش بسیار موفقیت‌آمیز بود و مورد استفاده شرکت‌های بزرگی از جمله گوگل، مایکروسافت و اپل قرار گرفت. 
+     تمامی روش‌های حریم خصوصی تفاضلی گفته شده از جمله حریم خصوصی تفاضلی محلی، یک سطح از حریم خصوصی را برای تمام کاربران در نظر می‌گیرند.
+    در نتیجه ممکن است برای بعضی از کاربران حریم خصوصی کم‌تری را در نظر بگیرند که به ناچار باید داده‌های آن‌ها را کاملا حذف کرد و برای برخی دیگر نیز حریم خصوصی بیش از حد انتظار ایجاد می‌کنند.
+    ما در این پایان‌نامه
+    سعي داريم كه با شخصي‌سازي حريم خصوصي تفاضلي محلي، نوفه‌ي داده‌ها را كاهش دهيم و به تبع آن بهره‌وري حريم خصوصي
+    محلي را افزايش دهيم. این راهکار می‌تواند نگرانی‌های متفاوت کاربران را به خوبی پاسخ دهد.
+    به منظور ارزیابی روش خود از محاسبه‌ی معیارهایی همچون توزیع مرکزی، بهره‌وری سراسری، محاسبه‌ی خطاهای مختلف و یا سایر معیار‌ها استفاده می‌کنیم.
+}{
+    {
+        حریم خصوصی تفاضلی
+        ,
+        حریم خصوصی تفاضلی محلی
+        ,
+        حریم خصوصی شخصی
+    }
+}
+
+\newpage
+%Table of progress:
+%   Pass pair of works and their duration in a comma delimited list.
+
+\ProgressTable{
+    {تحلیل و بررسی کارهای پیشین و بررسی چالش‌های مطرح/۴ ماه,
+    ارائه و پیشنهاد روشی برای بهبود راهکار‌های موجود/۳ ماه,
+    تهیه و ارائه گزارش سمینار/۲ ماه,
+    پیاده‌سازی و ارزیابی روش پیشنهادی/۵ ماه,
+    جمع‌بندی و تدوین پایان‌نامه/۲ ماه
+    }
+}
+\seperate
+
+\References{}
+
+\Courses{}
+
+\seperate
+
+\Signatures{}
+
+\end{document}
